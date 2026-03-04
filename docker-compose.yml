@@ -1,0 +1,78 @@
+version: "3.9"
+
+services:
+
+  app:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    container_name: rimboking_app
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+    networks:
+      - rimboking
+    depends_on:
+      - mysql
+      - redis
+
+  nginx:
+    image: nginx:stable-alpine
+    container_name: rimboking_nginx
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    volumes:
+      - ./:/var/www
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - rimboking
+    depends_on:
+      - app
+
+  mysql:
+    image: mysql:8.0
+    container_name: rimboking_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: rimboking_db
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: rimboking
+      MYSQL_PASSWORD: rimboking
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - rimboking
+
+  redis:
+    image: redis:alpine
+    container_name: rimboking_redis
+    restart: unless-stopped
+    networks:
+      - rimboking
+
+  queue:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    container_name: rimboking_queue
+    restart: unless-stopped
+    working_dir: /var/www
+    command: php artisan queue:work
+    volumes:
+      - ./:/var/www
+    networks:
+      - rimboking
+    depends_on:
+      - mysql
+      - redis
+
+networks:
+  hotel:
+
+
+volumes:
+  mysql_data:
