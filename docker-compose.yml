@@ -61,7 +61,7 @@ services:
     container_name: rimboking_queue
     restart: unless-stopped
     working_dir: /var/www
-    command: php artisan queue:work
+    command: php artisan queue:work redis --sleep=3 --tries=3 --timeout=90
     volumes:
       - ./:/var/www
     networks:
@@ -71,8 +71,8 @@ services:
       - redis
 
 networks:
-  hotel:
-
+  rimboking:
+    driver: bridge
 
 volumes:
   mysql_data:
