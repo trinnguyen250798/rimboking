@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\ValidationException;
-
+use App\Enums\UserRole;
 class AuthController extends Controller
 {
     /**
@@ -51,20 +51,56 @@ class AuthController extends Controller
     {
         $result = $authService->login(
             $request->email,
-            $request->password
+            $request->password,
+            $request->remember,
+            [
+                UserRole::Customer->value,
+            ]
         );
 
-        if (!$result) {
-            return response()->json([
-                'message' => 'Invalid credentials'
-            ], 401);
-        }
+       if ($result['status'] == false) {
+           return response()->json([
+               'status' => false,
+               'message' => $result['message'],
+           ], 401);
+       }
 
         return response()->json([
+            'status' => true,
             'token' => $result['token'],
-            'user'  => new UserResource($result['user'])
-        ]);
+            'user'  => new UserResource($result['user']),
+            'expires_at' => $result['expires_at']
+        ], 200);
     }
+
+    public function loginAdmin(LoginRequest $request, AuthService $authService): JsonResponse
+    {
+        $result = $authService->login(
+            $request->email,
+            $request->password,
+            $request->remember,
+            [
+                UserRole::Admin->value,
+                UserRole::Staff->value,
+                UserRole::HotelOwner->value
+            ]
+        );
+
+      if ($result['status'] == false) {
+           return response()->json([
+               'status' => false,
+               'message' => $result['message'],
+           ], 401);
+       }
+
+        return response()->json([
+            'status' => true,
+            'token' => $result['token'],
+            'user'  => new UserResource($result['user']),
+            'expires_at' => $result['expires_at']
+        ], 200);
+    }
+
 
     /**
      * Revoke the current user's token.

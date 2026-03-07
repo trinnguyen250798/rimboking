@@ -3,6 +3,8 @@
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
+use App\Enums\UserRole;
+use App\Http\Controllers\Api\Auth\LoginRequest;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,12 +32,24 @@ Route::prefix('v1')->group(function () {
         });
     });
 
+
+    Route::prefix('admin')->group(function () {
+        Route::post('login', [AuthController::class, 'loginAdmin']);
+        Route::middleware(['auth:sanctum','admin.role'])
+            ->group(function () {
+                Route::get('me', [AuthController::class, 'me']);
+                // Users management
+                Route::apiResource('users', Admin\UserController::class)
+                    ->parameters(['users' => 'ulid']);
+        });
+    });
+
+
     // ─── Authenticated routes ────────────────────────────────────────────────
     Route::middleware('auth:sanctum')->group(function () {
-
-        // Users (Admin only)
-        Route::apiResource('users', UserController::class);
-
+        // Client specific routes
+        Route::get('profile', [Client\UserController::class, 'show']);
+        Route::put('profile', [Client\UserController::class, 'update']);
     });
 
 });

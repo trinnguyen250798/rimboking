@@ -19,7 +19,8 @@ class UserResource extends JsonResource
             'name'  => $this->name,
             'email' => $this->email,
             'phone' => $this->phone,
-            'role'  => $this->role_id?->label(), // Trả về role name từ enum
+            'role'  => $this->role_id?->label(),
+            'role_id'  => $this->role_id,
         ];
     }
 }
