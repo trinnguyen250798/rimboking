@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\Admin;
+use App\Http\Controllers\Api\Client;
 use Illuminate\Support\Facades\Route;
 use App\Enums\UserRole;
 use App\Http\Controllers\Api\Auth\LoginRequest;
@@ -23,11 +25,11 @@ Route::prefix('v1')->group(function () {
     // ─── Auth ────────────────────────────────────────────────────────────────
     Route::prefix('auth')->group(function () {
         Route::post('register', [AuthController::class, 'register']);
-        Route::post('login',    [AuthController::class, 'login']);
+        Route::post('login', [AuthController::class, 'login']);
 
         Route::middleware('auth:sanctum')->group(function () {
-            Route::post('logout',  [AuthController::class, 'logout']);
-            Route::get('me',       [AuthController::class, 'me']);
+            Route::post('logout', [AuthController::class, 'logout']);
+            Route::get('me', [AuthController::class, 'me']);
             Route::post('refresh', [AuthController::class, 'refresh']);
         });
     });
@@ -35,13 +37,13 @@ Route::prefix('v1')->group(function () {
 
     Route::prefix('admin')->group(function () {
         Route::post('login', [AuthController::class, 'loginAdmin']);
-        Route::middleware(['auth:sanctum','admin.role'])
+        Route::middleware(['auth:sanctum', 'admin.role'])
             ->group(function () {
                 Route::get('me', [AuthController::class, 'me']);
                 // Users management
                 Route::apiResource('users', Admin\UserController::class)
                     ->parameters(['users' => 'ulid']);
-        });
+            });
     });
 
 
