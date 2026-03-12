@@ -14,8 +14,9 @@ class AdminRoleMiddleware
 
         if (!$user) {
             return response()->json([
+                'status' => false,
                 'message' => 'Unauthenticated'
-            ],401);
+            ], 401);
         }
 
         $allowedRoles = [
@@ -24,10 +25,11 @@ class AdminRoleMiddleware
             UserRole::Staff->value,
         ];
 
-        if (!in_array($user->role_id, $allowedRoles)) {
+        if (!in_array($user->role_id->value, $allowedRoles)) {
             return response()->json([
-                'message' => 'Permission denied'
-            ],403);
+                'status' => false,
+                'message' => 'Bạn không có quyền truy cập'
+            ], 403);
         }
 
         return $next($request);

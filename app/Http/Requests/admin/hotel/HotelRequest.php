@@ -1,6 +1,8 @@
 <?php
     
-namespace App\Http\Requests;
+namespace App\Http\Requests\admin\hotel;
+
+use App\Http\Requests\BaseApiRequest;
 
 class HotelRequest extends BaseApiRequest
 {
@@ -21,25 +23,32 @@ class HotelRequest extends BaseApiRequest
     {
         switch ($this->route()->getActionMethod()) {
         case 'index':
-            return [
-                'owner_id' => 'required|exists:users,id',
-            ];
+            return [ ];
         case 'store':
             return [
-                'name' => 'required|string',
-                'city' => 'required|string'
+                'name' => 'required|string|max:255',
+                'address' => 'required|string|max:255',
+                'city' => 'nullable|string',
+                'country' => 'nullable|string',
+                'phone' => 'nullable|string',
+                'email' => 'nullable|email'
             ];
 
         case 'update':
             return [
-                'name' => 'sometimes|string',
-                'city' => 'sometimes|string'
+                'name' => 'sometimes|string|max:255',
+                'address' => 'sometimes|string',
+                'city' => 'sometimes|string',
+                'phone' => 'sometimes|string',
+                'email' => 'sometimes|email'
             ];
-
-        case 'index':   
+        case 'upload_thumbnail':
             return [
-                'city' => 'nullable|string'
-            ];
+            'image' => 'required|image|mimes:jpg,jpeg,png,webp|max:4096'
+        ];
+
+       default:
+            return [];
         }   
     }
 

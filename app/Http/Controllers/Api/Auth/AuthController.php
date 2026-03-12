@@ -38,7 +38,7 @@ class AuthController extends Controller
         $token = $user->createToken('api-token')->plainTextToken;
 
         return response()->json([
-            'message' => 'Registered successfully.',
+            'message' => 'Đăng ký tài khoản thành công.',
             'user'    => new UserResource($user),
             'token'   => $token,
         ], 201);
@@ -109,7 +109,7 @@ class AuthController extends Controller
     {
         $request->user()->currentAccessToken()->delete();
 
-        return response()->json(['message' => 'Logged out successfully.']);
+        return response()->json(['message' => 'Đăng xuất thành công.']);
     }
 
     /**

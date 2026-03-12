@@ -11,25 +11,25 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('hotels', function (Blueprint $table) {
+
             $table->id();
             $table->ulid('ulid')->unique();
+
             $table->string('name');
             $table->string('slug')->unique();
 
             $table->text('description')->nullable();
 
-            $table->string('address');
+            $table->string('address')->nullable();
             $table->string('ward')->nullable();
             $table->string('district')->nullable();
-            $table->string('city');
+            $table->string('city')->index();
             $table->string('country')->default('Vietnam');
 
-            // Map location
-            $table->decimal('latitude', 10, 7)->nullable();
-            $table->decimal('longitude', 10, 7)->nullable();
+            $table->decimal('latitude',10,7)->nullable();
+            $table->decimal('longitude',10,7)->nullable();
 
-            // Hotel info
-            $table->tinyInteger('star')->default(0);
+            $table->tinyInteger('star_rating')->default(0)->index();
 
             $table->time('checkin_time')->nullable();
             $table->time('checkout_time')->nullable();
@@ -40,19 +40,15 @@ return new class extends Migration {
 
             $table->string('thumbnail')->nullable();
 
-            // Owner
-            $table->ulid('owner_id')->index();
+            $table->foreignId('owner_id')
+                ->constrained('users')
+                ->cascadeOnDelete();
 
-            // Status
             $table->tinyInteger('status')->default(1)->index();
 
             $table->timestamps();
 
-            // Index search
-            $table->index('ulid');
-            $table->index('city');
-            $table->index(['latitude', 'longitude']);
-            $table->index('star');
+            $table->index(['city','district']);
         });
     }
 

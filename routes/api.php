@@ -35,27 +35,27 @@ Route::prefix('v1')->group(function () {
     });
 
 
-    Route::prefix('admin')->group(function () {
+    Route::prefix('admin')->group(function () { 
+        // ─── Authenticated routes ────────────────────────────────────────────────
         Route::post('login', [AuthController::class, 'loginAdmin']);
         Route::middleware(['auth:sanctum', 'admin.role'])->group(function () {
             Route::get('me', [AuthController::class, 'me']);
             // Users management
             Route::apiResource('users', Admin\UserController::class)->parameters(['users' => 'ulid']);
 
-            Route::prefix('hotels')->group(function () {
-                Route::apiResource('/', Admin\HotelController::class)->parameters(['hotels' => 'ulid']);
-                Route::apiResource('rooms', Admin\RoomController::class)->parameters(['rooms' => 'ulid']);
+           Route::apiResource('hotels', Admin\HotelController::class)->parameters(['hotels' => 'hotel']);
 
-            });
+            Route::post('hotels/{hotel}/upload-thumbnail', [Admin\HotelController::class, 'upload_thumbnail']);
         });
-    });
+        
 
 
-    // ─── Authenticated routes ────────────────────────────────────────────────
-    Route::middleware('auth:sanctum')->group(function () {
-        // Client specific routes
-        Route::get('profile', [Client\UserController::class, 'show']);
-        Route::put('profile', [Client\UserController::class, 'update']);
+    
+        Route::middleware('auth:sanctum')->group(function () {
+            // Client specific routes
+            Route::get('profile', [Client\UserController::class, 'show']);
+            Route::put('profile', [Client\UserController::class, 'update']);
+        });
     });
 
 });
