@@ -21,6 +21,9 @@ class AdminUserSeeder extends Seeder
                 'role_id' => 1,
                 'status' => 1,
                 'email_verified_at' => now(),
+                'country_id' => 1,
+                'province_id' => 1,
+                'district_id' => 1,
             ]
         );
     }

@@ -11,87 +11,40 @@ use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
 use App\Http\Resources\HotelResource;
-
+use App\Services\HotelService;
 class HotelController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-   public function index(Request $request)
-{
-    $hotels = $request->user()
-        ->owner()
-        ->latest()
-        ->paginate(10);
+   public function index(Request $request, HotelService $hotelService)
+    {
+        $hotels = $hotelService->user_hotel($request->user());
 
-    return HotelResource::collection($hotels);
-}
+        return HotelResource::collection($hotels);
+    }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(HotelRequest $request): JsonResponse
+    public function store(HotelRequest $request, HotelService $hotelService): JsonResponse
     {
         $data = $request->validated();
-        $data['owner_id'] = $request->user()->id;
-        $hotel = Hotel::create($data);
+        $hotel = $hotelService->create_hotel($request->user(), $data);
 
-        return response()->json($hotel);
+        return response()->json([
+            'status' => true,
+            'message' => 'Tạo khách sạn thành công',
+            'data' => $hotel
+        ]);
     }
-public function upload_thumbnail(Request $request, Hotel $hotel): JsonResponse
-{
-    $request->validate([
-        'thumbnail' => 'required|image|max:4096'
-    ]);
-
-    $manager = new ImageManager(new Driver());
-    $image = $manager->read($request->file('thumbnail'));
-
-    $basePath = "hotels/{$hotel->ulid}";
-
-    // thumb
-    $thumb = clone $image;
-    Storage::disk('public')->put(
-        "$basePath/thumb.webp",
-        $thumb->scaleDown(width:300)->toWebp(70)
-    );
-
-    // small
-    $small = clone $image;
-    Storage::disk('public')->put(
-        "$basePath/small.webp",
-        $small->scaleDown(width:600)->toWebp(75)
-    );
-
-    // medium
-    $medium = clone $image;
-    Storage::disk('public')->put(
-        "$basePath/medium.webp",
-        $medium->scaleDown(width:900)->toWebp(80)
-    );
-
-    // large
-    $large = clone $image;
-    Storage::disk('public')->put(
-        "$basePath/large.webp",
-        $large->scaleDown(width:1600)->toWebp(85)
-    );
-
-    $hotel->update([
-        'thumbnail' => $basePath
-    ]);
-
-    return response()->json([
-        'status' => true,
-        'message' => 'Upload thành công',
-        'data' => [
-            'thumb' => url(Storage::url("$basePath/thumb.webp")),
-            'small' => url(Storage::url("$basePath/small.webp")),
-            'medium' => url(Storage::url("$basePath/medium.webp")),
-            'large' => url(Storage::url("$basePath/large.webp"))
-        ]
-    ]);
-}
+    public function upload_thumbnail(Request $request, Hotel $hotel, HotelService $hotelService): JsonResponse
+    {
+        $request->validate([
+            'thumbnail' => 'required|image|max:4096'
+        ]);
+        return $hotelService->upload_thumbnail($hotel, $request->file('thumbnail'));   
+    }
     /**
      * Display the specified resource.
      */ 

@@ -24,9 +24,9 @@ class Hotel extends Model
 
         'address',
         'ward',
-        'district',
-        'city',
-        'country',
+        'district_code', 
+        'province_code',
+        'country_code',
 
         'latitude',
         'longitude',
@@ -55,6 +55,20 @@ class Hotel extends Model
     {
         return $this->hasMany(Room::class, 'hotel_id', 'id');
     }
+
+    public function district()
+    {
+        return $this->belongsTo(District::class, 'district_code', 'code');
+    }
+
+    public function province()
+    {
+        return $this->belongsTo(Province::class, 'province_code', 'code');
+    } 
+    public function country()
+    {
+        return $this->belongsTo(Country::class, 'country_code', 'code');
+    }   
 
     protected static function booted()
     {

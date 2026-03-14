@@ -28,8 +28,8 @@ class HotelRequest extends BaseApiRequest
             return [
                 'name' => 'required|string|max:255',
                 'address' => 'required|string|max:255',
-                'city' => 'nullable|string',
-                'country' => 'nullable|string',
+                'province_id' => 'nullable|exists:provinces,id',
+                'country_id' => 'nullable|exists:countries,id',  
                 'phone' => 'nullable|string',
                 'email' => 'nullable|email'
             ];
@@ -38,11 +38,12 @@ class HotelRequest extends BaseApiRequest
             return [
                 'name' => 'sometimes|string|max:255',
                 'address' => 'sometimes|string',
-                'city' => 'sometimes|string',
+                'province_id' => 'nullable|exists:provinces,id',
+                'country_id' => 'nullable|exists:countries,id',  
                 'phone' => 'sometimes|string',
                 'email' => 'sometimes|email'
             ];
-        case 'upload_thumbnail':
+        case 'upload_thumbnail':    
             return [
             'image' => 'required|image|mimes:jpg,jpeg,png,webp|max:4096'
         ];

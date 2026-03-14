@@ -21,34 +21,23 @@ return new class extends Migration {
             $table->text('description')->nullable();
 
             $table->string('address')->nullable();
-            $table->string('ward')->nullable();
-            $table->string('district')->nullable();
-            $table->string('city')->index();
-            $table->string('country')->default('Vietnam');
-
+            $table->string('district_code')->nullable();
+            $table->string('province_code')->index();
+            $table->char('country_code',2)->default('VN')->index();
             $table->decimal('latitude',10,7)->nullable();
             $table->decimal('longitude',10,7)->nullable();
-
             $table->tinyInteger('star_rating')->default(0)->index();
-
             $table->time('checkin_time')->nullable();
             $table->time('checkout_time')->nullable();
-
             $table->string('phone')->nullable();
             $table->string('email')->nullable();
             $table->string('website')->nullable();
-
             $table->string('thumbnail')->nullable();
-
-            $table->foreignId('owner_id')
-                ->constrained('users')
-                ->cascadeOnDelete();
-
+            $table->foreignId('owner_id')->constrained('users')->cascadeOnDelete();
             $table->tinyInteger('status')->default(1)->index();
-
             $table->timestamps();
 
-            $table->index(['city','district']);
+            $table->index(['province_code','district_code','country_code']);
         });
     }
 

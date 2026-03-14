@@ -7,7 +7,9 @@ use App\Http\Controllers\Api\Client;
 use Illuminate\Support\Facades\Route;
 use App\Enums\UserRole;
 use App\Http\Controllers\Api\Auth\LoginRequest;
-
+use App\Http\Controllers\CountryController;
+use App\Http\Controllers\ProvinceController;
+use App\Http\Controllers\DistrictController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -32,6 +34,13 @@ Route::prefix('v1')->group(function () {
             Route::get('me', [AuthController::class, 'me']);
             Route::post('refresh', [AuthController::class, 'refresh']);
         });
+    });
+ // ─── Location ────────────────────────────────────────────────────────────────
+    Route::prefix('location')->group(function () {
+        Route::get('countries',[CountryController::class,'index']);
+        Route::get('provinces',[ProvinceController::class,'index']);
+        Route::get('provinces/{country_code}',[ProvinceController::class,'getByCountry']);
+        Route::get('districts/{province_code}',[DistrictController::class,'getByProvince']);
     });
 
 

@@ -23,7 +23,10 @@ return new class extends Migration {
             $table->string('provider')->nullable()->after('last_login_at');
 
             $table->string('provider_id')->nullable()->after('provider');
-
+            $table->string('address')->nullable();
+            $table->foreignUlid('district_id')->nullable();
+            $table->foreignUlid('province_id')->index();
+            $table->foreignUlid('country_id')->default('Vietnam')->index();
             $table->softDeletes();
         });
     }
@@ -41,6 +44,10 @@ return new class extends Migration {
                 'last_login_at',
                 'provider',
                 'provider_id',
+                'address',
+                'district_id',
+                'province_id',
+                'country_id',
                 'deleted_at'
             ]);
         });

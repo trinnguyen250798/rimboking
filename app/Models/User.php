@@ -69,5 +69,9 @@ class User extends Authenticatable
     {
         return 'ulid';
     }
+    public function hotels()
+    {
+        return $this->hasMany(Hotel::class, 'owner_id', 'id');
+    }
 }
 

@@ -32,9 +32,8 @@ class HotelResource extends JsonResource
 
             'address' => [
                 'address' => $this->address,
-                'ward' => $this->ward,
                 'district' => $this->district,
-                'city' => $this->city,
+                'province' => $this->province,
                 'country' => $this->country,
             ],
 
