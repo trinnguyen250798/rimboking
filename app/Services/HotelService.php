@@ -9,7 +9,14 @@ class HotelService
 
     public function user_hotel($user)
     {
-        return $user->hotels()->latest()->paginate(10);
+        return $user->hotels()
+            ->with([
+                'district:id,code,name,province_code',
+                'province:id,code,name,country_code',
+                'country:id,code,name',
+            ])
+            ->latest()
+            ->paginate(10);
     }
 
     public function create_hotel($user, $data)
