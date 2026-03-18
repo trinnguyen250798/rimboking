@@ -52,7 +52,7 @@ Route::prefix('v1')->group(function () {
             // Users management
             Route::apiResource('users', Admin\UserController::class)->parameters(['users' => 'ulid']);
 
-           Route::apiResource('hotels', Admin\HotelController::class)->parameters(['hotels' => 'hotel']);
+            Route::apiResource('hotels', Admin\HotelController::class)->parameters(['hotels' => 'hotel']);
 
             Route::post('hotels/{hotel}/upload-thumbnail', [Admin\HotelController::class, 'upload_thumbnail']);
         });

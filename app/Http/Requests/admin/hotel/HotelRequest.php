@@ -28,18 +28,26 @@ class HotelRequest extends BaseApiRequest
             return [
                 'name' => 'required|string|max:255',
                 'address' => 'required|string|max:255',
-                'province_id' => 'nullable|exists:provinces,id',
-                'country_id' => 'nullable|exists:countries,id',  
+                'province_code' => 'required|string|exists:provinces,code',
+                'district_code' => 'nullable|string|exists:districts,code',
+                'country_code' => 'required|string|exists:countries,code',  
+                'latitude' => 'nullable|numeric',
+                'longitude' => 'nullable|numeric',
+                'star_rating' => 'nullable|integer|min:0|max:5',
+                'checkin_time' => 'nullable|date_format:H:i:s',
+                'checkout_time' => 'nullable|date_format:H:i:s',
                 'phone' => 'nullable|string',
-                'email' => 'nullable|email'
+                'email' => 'nullable|email',
+                'website' => 'nullable|url',
+                'status' => 'nullable|integer|in:0,1'
             ];
 
         case 'update':
             return [
                 'name' => 'sometimes|string|max:255',
                 'address' => 'sometimes|string',
-                'province_id' => 'nullable|exists:provinces,id',
-                'country_id' => 'nullable|exists:countries,id',  
+                'province_code' => 'nullable|exists:provinces,code',
+                'country_code' => 'nullable|exists:countries,code',  
                 'phone' => 'sometimes|string',
                 'email' => 'sometimes|email'
             ];
