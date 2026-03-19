@@ -21,12 +21,12 @@ class Hotel extends Model
     protected $fillable = [
         'name',
         'slug',
-        'subdomain',
+
         'description',
 
         'address',
         'ward',
-        'district_code', 
+        'district_code',
         'province_code',
         'country_code',
 
@@ -66,13 +66,13 @@ class Hotel extends Model
     public function province()
     {
         return $this->belongsTo(Province::class, 'province_code', 'code');
-    } 
+    }
     public function country()
     {
         return $this->belongsTo(Country::class, 'country_code', 'code');
-    }   
+    }
 
-   protected static function booted()
+    protected static function booted()
     {
         static::creating(function ($hotel) {
 
@@ -87,11 +87,11 @@ class Hotel extends Model
 
             $hotel->slug = $slug;
 
-            // ===== subdomain =====
-            $hotel->subdomain = generateSmartSubdomain(
-                $hotel->name,
-                fn($s) => !self::where('subdomain', $s)->exists()
-            );
+            // // ===== subdomain =====
+            // $hotel->subdomain = generateSmartSubdomain(
+            //     $hotel->name,
+            //     fn($s) => !self::where('subdomain', $s)->exists()
+            // );
         });
     }
 
