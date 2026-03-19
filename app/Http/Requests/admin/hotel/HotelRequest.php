@@ -39,7 +39,8 @@ class HotelRequest extends BaseApiRequest
                 'phone' => 'nullable|string',
                 'email' => 'nullable|email',
                 'website' => 'nullable|url',
-                'status' => 'nullable|integer|in:0,1'
+                'status' => 'nullable|integer|in:0,1',
+                'subdomain' => 'nullable|string|max:255|unique:hotels,subdomain'
             ];
 
         case 'update':

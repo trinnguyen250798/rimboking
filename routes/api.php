@@ -42,8 +42,6 @@ Route::prefix('v1')->group(function () {
         Route::get('provinces/{country_code}',[ProvinceController::class,'getByCountry']);
         Route::get('districts/{province_code}',[DistrictController::class,'getByProvince']);
     });
-
-
     Route::prefix('admin')->group(function () { 
         // ─── Authenticated routes ────────────────────────────────────────────────
         Route::post('login', [AuthController::class, 'loginAdmin']);
@@ -56,15 +54,35 @@ Route::prefix('v1')->group(function () {
 
             Route::post('hotels/{hotel}/upload-thumbnail', [Admin\HotelController::class, 'upload_thumbnail']);
         });
-        
-
-
-    
         Route::middleware('auth:sanctum')->group(function () {
             // Client specific routes
             Route::get('profile', [Client\UserController::class, 'show']);
             Route::put('profile', [Client\UserController::class, 'update']);
         });
-    });
+        
+        Route::middleware('auth:sanctum','identify.hotel','admin.role')->group(function () {
+            // Client specific routes
+            Route::get('/', function () {
+                $hotel = app('currentHotel');
+                 return response()->json([
+                    'status' => true,
+                    'data' => $hotel
+                ]);
+            });
+        });
 
+
+    });
 });
+
+// $domain = config('app.domain');
+// Route::domain(config('app.domain'))->middleware('identify.hotel')->group(function () {
+//     Route::post('login', [AuthController::class, 'loginHotel']);
+//     Route::get('/', function () {
+//         $hotel = app('currentHotel');
+//          return response()->json([
+//             'status' => true,
+//             'data' => $hotel
+//         ]);
+//     });
+// });

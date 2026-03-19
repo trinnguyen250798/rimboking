@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 
@@ -20,6 +21,7 @@ class Hotel extends Model
     protected $fillable = [
         'name',
         'slug',
+        'subdomain',
         'description',
 
         'address',
@@ -70,10 +72,26 @@ class Hotel extends Model
         return $this->belongsTo(Country::class, 'country_code', 'code');
     }   
 
-    protected static function booted()
+   protected static function booted()
     {
         static::creating(function ($hotel) {
-            $hotel->slug = \Str::slug($hotel->name);
+
+            // ===== slug =====
+            $baseSlug = Str::slug($hotel->name);
+            $slug = $baseSlug;
+            $i = 1;
+
+            while (self::where('slug', $slug)->exists()) {
+                $slug = $baseSlug . '-' . $i++;
+            }
+
+            $hotel->slug = $slug;
+
+            // ===== subdomain =====
+            $hotel->subdomain = generateSmartSubdomain(
+                $hotel->name,
+                fn($s) => !self::where('subdomain', $s)->exists()
+            );
         });
     }
 

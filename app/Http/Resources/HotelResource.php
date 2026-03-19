@@ -27,6 +27,7 @@ class HotelResource extends JsonResource
             'ulid' => $this->ulid,
             'name' => $this->name,
             'slug' => $this->slug,
+            'subdomain' => $this->subdomain,
 
             'description' => $this->description,
 

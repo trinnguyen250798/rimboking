@@ -26,6 +26,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->alias([
             'admin.role' => \App\Http\Middleware\AdminRoleMiddleware::class,
+            'identify.hotel' => \App\Http\Middleware\IdentifyHotel::class,
         ]);
 
         // Tránh chuyển hướng đến trang login khi chưa đăng nhập cho API

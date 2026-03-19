@@ -123,4 +123,6 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    'domain' => env('APP_SUBDOMAIN_DOMAIN', '127.0.0.1.nip.io'),
+
 ];
