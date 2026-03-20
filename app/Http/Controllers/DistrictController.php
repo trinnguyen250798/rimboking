@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\District;
 use Illuminate\Http\Request;
-
+use Symfony\Component\HttpFoundation\Response;
 class DistrictController extends Controller
 {
     /**
@@ -12,28 +12,40 @@ class DistrictController extends Controller
      */
     public function index(Request $request)
     {
-        return District::query()
+        $data = District::query()
             ->when($request->name, fn ($q, $name) =>
                 $q->where('name', 'LIKE', "%$name%")    
             )
             ->when($request->province_code, fn($q) => 
                 $q->where('province_code', $request->province_code)
             )
-            ->paginate(25);
+            ->get();
+        return response()->json([
+            'status' => true,
+            'data' => $data
+        ],Response::HTTP_OK);
     }
 
     public function getByProvince(string $provinceCode,Request $request)
     {
-        return District::query()
+        $data = District::query()   
             ->when($request->name, fn ($q, $name) =>
                 $q->where('name', 'LIKE', "%$name%")    
             )
             ->where('province_code', $provinceCode)
-            ->paginate(25);
+            ->get();
+        return response()->json([
+            'status' => true,
+            'data' => $data
+        ],Response::HTTP_OK);
     }   
     public function hotels(District $district)
     {
-        return $district->hotels()->latest()->paginate(25); 
+        $data = $district->hotels()->latest()->get(); 
+        return response()->json([
+            'status' => true,
+            'data' => $data
+        ],Response::HTTP_OK);
     }
     /**
      * Show the form for creating a new resource.

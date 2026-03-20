@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Province;
 use Illuminate\Http\Request;
-
+use Symfony\Component\HttpFoundation\Response;
 class ProvinceController extends Controller
 {
     /**
@@ -12,28 +12,40 @@ class ProvinceController extends Controller
      */
     public function index(Request $request)
     {
-        return Province::query()
+        $data = Province::query()
             ->when($request->name, fn ($q, $name) =>
                 $q->where('name', 'LIKE', "%$name%")    
             )
             ->when($request->country_code, fn($q) => 
                 $q->where('country_code', $request->country_code)
             )
-            ->paginate(25);
+            ->get();
+        return response()->json([
+            'status' => true,
+            'data' => $data
+        ],Response::HTTP_OK);
     }
 
     public function getByCountry(string $countryCode,Request $request)
     {
-        return Province::query()
+        $data = Province::query()
             ->when($request->name, fn ($q, $name) =>
                 $q->where('name', 'LIKE', "%$name%")    
             )
             ->where('country_code', $countryCode)
-            ->paginate(25);
+            ->get();
+        return response()->json([
+            'status' => true,
+            'data' => $data
+        ],Response::HTTP_OK); 
     }
     public function hotels(Province $province)
     {
-        return $province->hotels()->latest()->paginate(25);
+        $data = $province->hotels()->latest()->get();
+        return response()->json([
+            'status' => true,
+            'data' => $data
+        ],Response::HTTP_OK);
     }
     /**
      * Show the form for creating a new resource.

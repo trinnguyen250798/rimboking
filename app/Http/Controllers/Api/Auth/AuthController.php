@@ -13,7 +13,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\ValidationException;
-use App\Enums\UserRole;
+use App\Enums\UserRole; 
+use Symfony\Component\HttpFoundation\Response;
 class AuthController extends Controller
 {
     /**
@@ -41,7 +42,7 @@ class AuthController extends Controller
             'message' => 'Đăng ký tài khoản thành công.',
             'user'    => new UserResource($user),
             'token'   => $token,
-        ], 201);
+        ], Response::HTTP_CREATED);
     }
 
     /**
@@ -62,7 +63,7 @@ class AuthController extends Controller
            return response()->json([
                'status' => false,
                'message' => $result['message'],
-           ], 401);
+           ], Response::HTTP_UNAUTHORIZED);
        }
 
         return response()->json([
@@ -70,7 +71,7 @@ class AuthController extends Controller
             'token' => $result['token'],
             'user'  => new UserResource($result['user']),
             'expires_at' => $result['expires_at']
-        ], 200);
+        ], Response::HTTP_OK);
     }
 
     public function loginAdmin(LoginRequest $request, AuthService $authService): JsonResponse
@@ -90,7 +91,7 @@ class AuthController extends Controller
            return response()->json([
                'status' => false,
                'message' => $result['message'],
-           ], 401);
+           ], Response::HTTP_UNAUTHORIZED);
        }
 
         return response()->json([
@@ -98,7 +99,7 @@ class AuthController extends Controller
             'token' => $result['token'],
             'user'  => new UserResource($result['user']),
             'expires_at' => $result['expires_at']
-        ], 200);
+        ], Response::HTTP_OK);
     }
 
 
@@ -109,7 +110,10 @@ class AuthController extends Controller
     {
         $request->user()->currentAccessToken()->delete();
 
-        return response()->json(['message' => 'Đăng xuất thành công.']);
+        return response()->json([
+            'status' => true,
+            'message' => 'Đăng xuất thành công.'
+        ], Response::HTTP_OK);
     }
 
     /**
@@ -117,7 +121,10 @@ class AuthController extends Controller
      */
     public function me(Request $request): JsonResponse
     {
-        return response()->json(new UserResource($request->user()));
+        return response()->json([
+            'status' => true,
+            'data' => new UserResource($request->user())
+        ], Response::HTTP_OK);
     }
 
     /**
@@ -128,6 +135,9 @@ class AuthController extends Controller
         $request->user()->currentAccessToken()->delete();
         $token = $request->user()->createToken('api-token')->plainTextToken;
 
-        return response()->json(['token' => $token]);
+        return response()->json([
+            'status' => true,
+            'token' => $token
+        ], Response::HTTP_OK);
     }
 }

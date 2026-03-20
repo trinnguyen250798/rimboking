@@ -12,6 +12,7 @@ use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
 use App\Http\Resources\HotelResource;
 use App\Services\HotelService;
+use Symfony\Component\HttpFoundation\Response;
 class HotelController extends Controller
 {
     /**
@@ -21,7 +22,10 @@ class HotelController extends Controller
     {
         $hotels = $hotelService->user_hotel($request->user());
 
-        return HotelResource::collection($hotels);
+        return response()->json([
+            'status' => true,
+            'data' => HotelResource::collection($hotels)
+        ],Response::HTTP_OK);
     }
 
     /**
@@ -36,7 +40,7 @@ class HotelController extends Controller
             'status' => true,
             'message' => 'Tạo khách sạn thành công',
             'data' => $hotel
-        ]);
+        ],Response::HTTP_CREATED);
     }
     public function upload_thumbnail(Request $request, Hotel $hotel, HotelService $hotelService): JsonResponse
     {
@@ -48,9 +52,12 @@ class HotelController extends Controller
     /**
      * Display the specified resource.
      */ 
-    public function show(Hotel $hotel) : HotelResource
+    public function show(Hotel $hotel) : JsonResponse
     {
-        return new HotelResource($hotel);
+        return response()->json([
+            'status' => true,
+            'data' => new HotelResource($hotel)
+        ],Response::HTTP_OK);
     }
 
     /**

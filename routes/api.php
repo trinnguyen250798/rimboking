@@ -39,10 +39,10 @@ Route::prefix('v1')->group(function () {
     Route::prefix('location')->group(function () {
         Route::get('countries',[CountryController::class,'index']);
         Route::get('provinces',[ProvinceController::class,'index']);
-        Route::get('provinces/{country_code}',[ProvinceController::class,'getByCountry']);
-        Route::get('districts/{province_code}',[DistrictController::class,'getByProvince']);
+        Route::get('{country_code}/provinces',[ProvinceController::class,'getByCountry']);
+        Route::get('{province_code}/districts',[DistrictController::class,'getByProvince']);
     });
-    Route::prefix('admin')->group(function () { 
+    Route::prefix('admin')->group(function () {
         // ─── Authenticated routes ────────────────────────────────────────────────
         Route::post('login', [AuthController::class, 'loginAdmin']);
         Route::middleware(['auth:sanctum', 'admin.role'])->group(function () {
@@ -59,7 +59,7 @@ Route::prefix('v1')->group(function () {
             Route::get('profile', [Client\UserController::class, 'show']);
             Route::put('profile', [Client\UserController::class, 'update']);
         });
-        
+
         Route::middleware('auth:sanctum','identify.hotel','admin.role')->group(function () {
             // Client specific routes
             Route::get('/', function () {

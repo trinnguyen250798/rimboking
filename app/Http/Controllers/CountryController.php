@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Country;
 use Illuminate\Http\Request;
-
+use Symfony\Component\HttpFoundation\Response;
 class CountryController extends Controller
 {
     /**
@@ -12,7 +12,7 @@ class CountryController extends Controller
      */
    public function index(Request $request)
     {
-        return Country::query()
+        $data = Country::query()
             ->when($request->name, fn ($q, $name) =>
                 $q->where('name', 'LIKE', "%$name%")    
             )
@@ -22,11 +22,19 @@ class CountryController extends Controller
             ->when($request->slug, fn($q) => 
                 $q->where('slug', $request->slug)
             )
-            ->paginate(25);
+            ->get();
+        return response()->json([
+            'status' => true,
+            'data' => $data
+        ],Response::HTTP_OK);
     }
     public function hotels(Country $country)
     {
-        return $country->hotels()->latest()->paginate(25);
+        $data = $country->hotels()->latest()->paginate(25);
+        return response()->json([
+            'status' => true,
+            'data' => $data
+        ],Response::HTTP_OK);
     }   
     /**
      * Show the form for creating a new resource.

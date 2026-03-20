@@ -9,7 +9,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
-
+use Symfony\Component\HttpFoundation\Response;
 class UserController extends Controller
 {
     /**
@@ -19,7 +19,10 @@ class UserController extends Controller
     {
         $users = User::latest()->paginate(15);
 
-        return UserResource::collection($users)->response();
+        return response()->json([
+            'status' => true,
+            'data' => UserResource::collection($users)
+        ],Response::HTTP_OK);
     }
 
     /**
@@ -40,9 +43,10 @@ class UserController extends Controller
             'password' => Hash::make($validated['password']),
         ]);
 
-        return (new UserResource($user))
-            ->response()
-            ->setStatusCode(201);
+        return response()->json([
+            'status' => true,
+            'data' => new UserResource($user)
+        ],Response::HTTP_CREATED);  
     }
 
     /**
@@ -50,7 +54,10 @@ class UserController extends Controller
      */
     public function show(User $user): JsonResponse
     {
-        return (new UserResource($user))->response();
+        return response()->json([
+            'status' => true,
+            'data' => new UserResource($user)
+        ],Response::HTTP_OK);
     }
 
     /**
@@ -73,7 +80,10 @@ class UserController extends Controller
 
         $user->update($validated);
 
-        return (new UserResource($user))->response();
+        return response()->json([
+            'status' => true,
+            'data' => new UserResource($user)
+        ],Response::HTTP_OK);
     }
 
     /**
@@ -83,6 +93,9 @@ class UserController extends Controller
     {
         $user->delete();
 
-        return response()->json(['message' => 'User deleted.'], 200);
-    }
+        return response()->json([
+            'status' => true,
+            'message' => 'Xóa tài khoản thành công.'
+        ],Response::HTTP_NO_CONTENT);
+    }   
 }
