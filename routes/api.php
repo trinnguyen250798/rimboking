@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\Auth\LoginRequest;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\ProvinceController;
 use App\Http\Controllers\DistrictController;
+use App\Http\Controllers\Controller;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -41,6 +42,10 @@ Route::prefix('v1')->group(function () {
         Route::get('provinces',[ProvinceController::class,'index']);
         Route::get('{country_code}/provinces',[ProvinceController::class,'getByCountry']);
         Route::get('{province_code}/districts',[DistrictController::class,'getByProvince']);
+    });
+    // ─── Type Hotel ────────────────────────────────────────────────────────────────
+    Route::prefix('type-hotel')->group(function () {
+        Route::get('/', [Admin\HotelController::class, 'getTypeHotel']);
     });
     Route::prefix('admin')->group(function () {
         // ─── Authenticated routes ────────────────────────────────────────────────

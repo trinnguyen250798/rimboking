@@ -46,7 +46,38 @@ class Hotel extends Model
 
         'owner_id',
 
-        'status'
+        'status',
+
+        'short_description',
+
+        'rating_avg',
+        'rating_count',
+
+        'price_from',
+        'price_to',
+
+        'total_images',
+
+        'is_refundable',
+        'is_free_cancellation',
+        'checkin_policy',
+        'checkout_policy',
+
+        'is_featured',
+        'is_top_deal',
+
+        'booking_count',
+        'view_count',
+
+        'type',
+
+        'languages',
+        'payment_options',
+
+        'meta_title',
+        'meta_description',
+
+        'deleted_at',
     ];
     public function owner()
     {
@@ -70,6 +101,10 @@ class Hotel extends Model
     public function country()
     {
         return $this->belongsTo(Country::class, 'country_code', 'code');
+    }
+    public function amenities()
+    {
+        return $this->belongsToMany(Amenity::class, 'hotel_amenities', 'hotel_id', 'amenity_id');
     }
 
     protected static function booted()

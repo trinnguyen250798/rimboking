@@ -28,38 +28,41 @@ class HotelResource extends JsonResource
             'name' => $this->name,
             'slug' => $this->slug,
             'subdomain' => $this->subdomain,
-
             'description' => $this->description,
-
-            'address' => [
-                'address' => $this->address,
-                'district' => $this->district,
-                'province' => $this->province,
-                'country' => $this->country,
-            ],
-
-            'location' => [
-                'lat' => $this->latitude,
-                'lng' => $this->longitude,
-            ],
-
+            'address' => $this->address,
+            'district' => $this->district,
+            'province' => $this->province,
+            'country' => $this->country,
+            'latitude' => $this->latitude,
+            'longitude' => $this->longitude,
             'star_rating' => $this->star_rating,
-
             'checkin_time' => $this->checkin_time,
             'checkout_time' => $this->checkout_time,
-
-            'contact' => [
-                'phone' => $this->phone,
-                'email' => $this->email,
-                'website' => $this->website,
-            ],
-
+            'phone' => $this->phone,
+            'email' => $this->email,
+            'website' => $this->website,
             'images' => $images,
-
             'status' => (bool) $this->status,
-
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'short_description' => $this->short_description,
+            'rating_avg' => $this->rating_avg,
+            'rating_count' => $this->rating_count,
+            'price_from' => $this->price_from,
+            'price_to' => $this->price_to,
+            'total_images' => $this->total_images,
+            'is_refundable' => $this->is_refundable,
+            'is_free_cancellation' => $this->is_free_cancellation,
+            'checkin_policy' => $this->checkin_policy,
+            'checkout_policy' => $this->checkout_policy,
+            'is_featured' => $this->is_featured,
+            'is_top_deal' => $this->is_top_deal,
+            'booking_count' => $this->booking_count,
+            'view_count' => $this->view_count,
+            'type' => $this->type,
+            'type_label' => $this->type->label(),
+            'languages' => $this->languages,
+            'payment_options' => $this->payment_options,
+            'meta_title' => $this->meta_title,
+            'meta_description' => $this->meta_description,  
         ];
     }
 }

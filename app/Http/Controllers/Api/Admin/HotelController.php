@@ -13,6 +13,7 @@ use Intervention\Image\Drivers\Gd\Driver;
 use App\Http\Resources\HotelResource;
 use App\Services\HotelService;
 use Symfony\Component\HttpFoundation\Response;
+use App\Enums\TypeHotel;
 class HotelController extends Controller
 {
     /**
@@ -74,5 +75,19 @@ class HotelController extends Controller
     public function destroy(Hotel $hotel)
     {
         //
+    }
+    public function getTypeHotel(): JsonResponse
+    {
+        $typeHotels = [];
+        foreach (TypeHotel::cases() as $typeHotel) {
+            $typeHotels[] = [
+                'value' => $typeHotel->value,
+                'label' => $typeHotel->label(),
+            ];
+        }
+        return response()->json([
+            'status' => true,
+            'data' => $typeHotels,
+        ],Response::HTTP_OK);
     }
 }

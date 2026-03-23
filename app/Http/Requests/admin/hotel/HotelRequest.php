@@ -34,13 +34,33 @@ class HotelRequest extends BaseApiRequest
                 'latitude' => 'nullable|numeric',
                 'longitude' => 'nullable|numeric',
                 'star_rating' => 'nullable|integer|min:0|max:5',
-                'checkin_time' => 'nullable|date_format:H:i:s',
-                'checkout_time' => 'nullable|date_format:H:i:s',
+                'checkin_time' => 'nullable|date_format:H:i',
+                'checkout_time' => 'nullable|date_format:H:i',
                 'phone' => 'nullable|string',
                 'email' => 'nullable|email',
                 'website' => 'nullable|url',
                 'status' => 'nullable|integer|in:0,1',
-                'subdomain' => 'nullable|string|max:255|unique:hotels,subdomain'
+                'subdomain' => 'nullable|string|max:255|unique:hotels,subdomain',
+
+                'short_description' => 'nullable|string',
+                'rating_avg' => 'nullable|numeric',
+                'rating_count' => 'nullable|integer',
+                'price_from' => 'nullable|integer',
+                'price_to' => 'nullable|integer',
+                'total_images' => 'nullable|integer',
+                'is_refundable' => 'nullable|boolean',
+                'is_free_cancellation' => 'nullable|boolean',
+                'checkin_policy' => 'nullable|string',
+                'checkout_policy' => 'nullable|string',
+                'is_featured' => 'nullable|boolean',
+                'is_top_deal' => 'nullable|boolean',
+                'booking_count' => 'nullable|integer',
+                'view_count' => 'nullable|integer',
+                'type' => 'nullable|string',
+                'languages' => 'nullable|array',
+                'payment_options' => 'nullable|array',
+                'meta_title' => 'nullable|string',
+                'meta_description' => 'nullable|string',
             ];
 
         case 'update':
@@ -50,7 +70,25 @@ class HotelRequest extends BaseApiRequest
                 'province_code' => 'nullable|exists:provinces,code',
                 'country_code' => 'nullable|exists:countries,code',  
                 'phone' => 'sometimes|string',
-                'email' => 'sometimes|email'
+                'email' => 'sometimes|email',
+
+                'short_description' => 'nullable|string',
+                'price_from' => 'nullable|integer',
+                'price_to' => 'nullable|integer',
+                'total_images' => 'nullable|integer',
+                'is_refundable' => 'nullable|boolean',
+                'is_free_cancellation' => 'nullable|boolean',
+                'checkin_policy' => 'nullable|string',
+                'checkout_policy' => 'nullable|string',
+                'is_featured' => 'nullable|boolean',
+                'is_top_deal' => 'nullable|boolean',
+                'booking_count' => 'nullable|integer',
+                'view_count' => 'nullable|integer',
+                'type' => 'nullable|string',
+                'languages' => 'nullable|array',
+                'payment_options' => 'nullable|array',
+                'meta_title' => 'nullable|string',
+                'meta_description' => 'nullable|string',
             ];
         case 'upload_thumbnail':    
             return [
