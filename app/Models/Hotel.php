@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
-
+use App\Enums\TypeHotel;
 class Hotel extends Model
 {
     use HasUlids;
@@ -105,6 +105,13 @@ class Hotel extends Model
     public function amenities()
     {
         return $this->belongsToMany(Amenity::class, 'hotel_amenities', 'hotel_id', 'amenity_id');
+    }
+    protected function casts(): array
+    {
+        return [
+
+            'type' => TypeHotel::class,
+        ];
     }
 
     protected static function booted()

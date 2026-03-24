@@ -47,6 +47,9 @@ Route::prefix('v1')->group(function () {
     Route::prefix('type-hotel')->group(function () {
         Route::get('/', [Admin\HotelController::class, 'getTypeHotel']);
     });
+    Route::prefix('amenities')->group(function () {
+        Route::get('/', [Admin\HotelController::class, 'getAmenities']);
+    });
     Route::prefix('admin')->group(function () {
         // ─── Authenticated routes ────────────────────────────────────────────────
         Route::post('login', [AuthController::class, 'loginAdmin']);

@@ -58,11 +58,13 @@ class HotelResource extends JsonResource
             'booking_count' => $this->booking_count,
             'view_count' => $this->view_count,
             'type' => $this->type,
-            'type_label' => $this->type->label(),
+            'type_label' => $this->type?->label(),
             'languages' => $this->languages,
             'payment_options' => $this->payment_options,
             'meta_title' => $this->meta_title,
-            'meta_description' => $this->meta_description,  
+            'meta_description' => $this->meta_description,
+            'amenities' => $this->amenities()->where('amenities.is_active', 1)->select('amenities.id','amenities.name','amenities.icon')->get(),
+
         ];
     }
 }
