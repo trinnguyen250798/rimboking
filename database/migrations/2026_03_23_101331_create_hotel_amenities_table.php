@@ -9,10 +9,10 @@ return new class extends Migration {
     {
         Schema::create('hotel_amenities', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('hotel_id');
+            $table->ulid('hotel_id');
             $table->unsignedBigInteger('amenity_id');
 
-            $table->foreign('hotel_id')->references('id')->on('hotels')->onDelete('cascade');
+            $table->foreign('hotel_id')->references('ulid')->on('hotels')->onDelete('cascade');
             $table->foreign('amenity_id')->references('id')->on('amenities')->onDelete('cascade');
 
             $table->unique(['hotel_id', 'amenity_id']); // tránh trùng

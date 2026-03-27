@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\ValidationException;
-use App\Enums\UserRole; 
+use App\Enums\UserRole;
 use Symfony\Component\HttpFoundation\Response;
 class AuthController extends Controller
 {
@@ -53,7 +53,7 @@ class AuthController extends Controller
         $result = $authService->login(
             $request->email,
             $request->password,
-            $request->remember,
+            $request->remember_me,
             [
                 UserRole::Customer->value,
             ]

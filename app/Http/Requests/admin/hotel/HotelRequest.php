@@ -1,5 +1,5 @@
 <?php
-    
+
 namespace App\Http\Requests\admin\hotel;
 
 use App\Http\Requests\BaseApiRequest;
@@ -30,7 +30,7 @@ class HotelRequest extends BaseApiRequest
                 'address' => 'required|string|max:255',
                 'province_code' => 'required|string|exists:provinces,code',
                 'district_code' => 'nullable|string|exists:districts,code',
-                'country_code' => 'required|string|exists:countries,code',  
+                'country_code' => 'required|string|exists:countries,code',
                 'latitude' => 'nullable|numeric',
                 'longitude' => 'nullable|numeric',
                 'star_rating' => 'nullable|integer|min:0|max:5',
@@ -56,11 +56,13 @@ class HotelRequest extends BaseApiRequest
                 'is_top_deal' => 'nullable|boolean',
                 'booking_count' => 'nullable|integer',
                 'view_count' => 'nullable|integer',
-                'type' => 'nullable|string',
+                'type' => 'nullable|int',
                 'languages' => 'nullable|array',
                 'payment_options' => 'nullable|array',
                 'meta_title' => 'nullable|string',
                 'meta_description' => 'nullable|string',
+                'amenity_ids' => 'nullable|array',
+                'amenity_ids.*' => 'integer|distinct|exists:amenities,id',
             ];
 
         case 'update':
@@ -68,7 +70,7 @@ class HotelRequest extends BaseApiRequest
                 'name' => 'sometimes|string|max:255',
                 'address' => 'sometimes|string',
                 'province_code' => 'nullable|exists:provinces,code',
-                'country_code' => 'nullable|exists:countries,code',  
+                'country_code' => 'nullable|exists:countries,code',
                 'phone' => 'sometimes|string',
                 'email' => 'sometimes|email',
 
@@ -90,14 +92,14 @@ class HotelRequest extends BaseApiRequest
                 'meta_title' => 'nullable|string',
                 'meta_description' => 'nullable|string',
             ];
-        case 'upload_thumbnail':    
+        case 'upload_thumbnail':
             return [
             'image' => 'required|image|mimes:jpg,jpeg,png,webp|max:4096'
         ];
 
        default:
             return [];
-        }   
+        }
     }
 
     public function messages(): array

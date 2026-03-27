@@ -82,8 +82,8 @@ class HotelController extends Controller
         $typeHotels = [];
         foreach (TypeHotel::cases() as $typeHotel) {
             $typeHotels[] = [
-                'value' => $typeHotel->value,
-                'label' => $typeHotel->label(),
+                'id' => $typeHotel->value,
+                'name' => $typeHotel->label(),
             ];
         }
         return response()->json([
@@ -92,7 +92,7 @@ class HotelController extends Controller
         ],Response::HTTP_OK);
     }
     public function getAmenities(): JsonResponse{
-        $data = Amenity::select('name', 'icon')->where('is_active', 1)->get()->toArray();
+        $data = Amenity::select('id','name', 'icon','category')->where('is_active', 1)->get()->toArray();
         return response()->json([
             'status' => true,
             'data' => $data,

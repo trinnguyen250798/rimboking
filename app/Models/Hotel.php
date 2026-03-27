@@ -104,7 +104,12 @@ class Hotel extends Model
     }
     public function amenities()
     {
-        return $this->belongsToMany(Amenity::class, 'hotel_amenities', 'hotel_id', 'amenity_id');
+        return $this->belongsToMany(
+            Amenity::class,
+            'hotel_amenities',
+            'hotel_id',   // INT
+            'amenity_id'  // INT
+        );
     }
     protected function casts(): array
     {
@@ -136,5 +141,9 @@ class Hotel extends Model
             // );
         });
     }
+    protected $casts = [
+        'languages' => 'array',
+        'payment_options' => 'array',
+    ];
 
 }

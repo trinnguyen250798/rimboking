@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace App\Services;
 
 use App\Models\User;
@@ -24,15 +24,17 @@ class AuthService
             ];
         }
 
-    
+
         if (!in_array($user->role_id->value, $role)) {
             return [
                 'status' => false,
                 'message' => 'Tài khoản không có quyền truy cập',
             ];
         }
-        $user->tokens()->delete();
-        $expiresAt = $remember ? now()->addDays(30) : now()->addDay();
+        $user->currentAccessToken()?->delete();
+        $expiresAt = $remember
+            ? now()->addDays(30)
+            : now()->addDay();
         $token = $user->createToken('api-token', ['*'], $expiresAt)->plainTextToken;
 
         return [

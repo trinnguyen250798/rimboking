@@ -61,6 +61,10 @@ Route::prefix('v1')->group(function () {
             Route::apiResource('hotels', Admin\HotelController::class)->parameters(['hotels' => 'hotel']);
 
             Route::post('hotels/{hotel}/upload-thumbnail', [Admin\HotelController::class, 'upload_thumbnail']);
+
+            Route::apiResource('departments', Admin\DepartmentController::class);
+            Route::apiResource('positions', Admin\PositionController::class);
+
         });
         Route::middleware('auth:sanctum')->group(function () {
             // Client specific routes
@@ -77,6 +81,8 @@ Route::prefix('v1')->group(function () {
                     'data' => $hotel
                 ]);
             });
+            
+            Route::apiResource('staff', Admin\StaffController::class)->parameters(['staff' => 'staff']);
         });
 
 

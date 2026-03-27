@@ -6,7 +6,7 @@ use App\Models\Hotel;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
 use Illuminate\Support\Facades\Storage;
-
+use Illuminate\Support\Facades\DB;
 class HotelService
 {
 
@@ -24,9 +24,17 @@ class HotelService
 
     public function create_hotel($user, $data)
     {
-        return $user->hotels()->create($data);
+        return DB::transaction(function () use ($user, $data) {
+            $amenity_ids = $data['amenity_ids'] ?? [];
+            unset($data['amenity_ids']);
+            $hotel = $user->hotels()->create($data);
+            if (!empty($amenity_ids)) {
+                $hotel->amenities()->sync($amenity_ids);
+            }
+            return $hotel;
+        });
     }
-   
+
     public function upload_thumbnail($hotel, $image)
     {
         $manager = new ImageManager(new Driver());
@@ -76,5 +84,16 @@ class HotelService
                 'large' => url(Storage::url("$basePath/large.webp"))
             ]
         ]);
+    }
+
+    public function staffs($hotel)
+    {
+        return $hotel->staffs()
+            ->with([
+                'department:id,name',
+                'position:id,name',
+            ])
+            ->latest()
+            ->paginate(25);
     }
 }
