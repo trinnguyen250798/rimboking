@@ -13,7 +13,7 @@ class PositionController extends Controller
 {
     public function index(): JsonResponse
     {
-        $positions = Position::all();
+        $positions = Position::all('id','name','slug');
         return response()->json([
             'status' => true,
             'data' => $positions,
