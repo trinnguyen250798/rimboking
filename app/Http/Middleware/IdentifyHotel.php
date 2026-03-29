@@ -1,11 +1,11 @@
 <?php
 
 namespace App\Http\Middleware;
-
+use Illuminate\Support\Facades\Auth;
 use Closure;
 use Illuminate\Http\Request;
 use App\Models\Hotel;
-
+use App\Enums\UserRole;
 class IdentifyHotel
 {
    public function handle(Request $request, Closure $next)
@@ -31,15 +31,30 @@ class IdentifyHotel
         }
 
         $user = Auth::user();
-        if ($user->hotel_id != $hotel->id) {
-            return response()->json([
+        if(!$user){
+             return response()->json([
                 'status' => false,
-                'message' => 'Bạn không có quyền truy cập khách sạn này'
-            ], 403);
+                'message' => 'Không tìm thấy thoong tin người dùng'
+            ], 404);
+        }
+        
+        if($user->role_id == UserRole::Admin){
+            app()->instance('currentHotel', $hotel);
+            return $next($request);
+        }else{
+            if ($user->hotel_id != $hotel->id) {
+                
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Bạn không có quyền truy cập khách sạn này',
+               
+                ], 403);
+            }
         }
 
-        app()->instance('currentHotel', $hotel);
+        
 
+        app()->instance('currentHotel', $hotel);
         return $next($request);
     }
 }

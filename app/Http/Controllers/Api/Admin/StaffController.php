@@ -28,16 +28,45 @@ class StaffController extends Controller
     public function store(Request $request): JsonResponse
     {
         $hotel = app('currentHotel');
-        $data = $request->validate([
-            'user_id'       => 'required|exists:users,id',
+
+       $data = $request->validate([
+            'name'          => 'required|string|max:255',
+            'email'         => 'required|email|unique:users,email',
+            'phone'         => ['required', 'regex:/^(0|\+84)[0-9]{9}$/'],
+            'password'      => 'nullable|min:6',
+
             'department_id' => 'required|exists:departments,id',
             'position_id'   => 'required|exists:positions,id',
+            'district_id'   => 'required|exists:districts,id',
+
+            'province_id'   => 'required|exists:provinces,id',
+            'country_id'    => 'required|exists:countries,id',
+        ]);
+        $data_user = [
+            'ulid'           => (string) Str::ulid(),
+            'name'           => $data['name'],
+            'email'          => $data['email'],
+            'phone'          => $data['phone'],
+            'department_id'  => $data['department_id'],
+            'position_id'    => $data['position_id'],
+            'district_id'    => $data['district_id'],
+            'role_id'        => 4,
+            'status'         => 1,
+            'email_verified_at' => now(),
+        ];
+
+        if (!empty($data['password'])) {
+            $data_user['password'] = Hash::make($data['password']);
+        }
+
+        $user = User::create($data_user);
+
+        $staff = Staff::create([
+            'user_id'  => $user->id,
+            'hotel_id' => $hotel->id,
+            'ulid'     => (string) Str::ulid(),
         ]);
 
-        $data['hotel_id'] = $hotel->id;
-        $data['ulid'] = (string) Str::ulid();
-
-        $staff = Staff::create($data);
         $staff->load(['user', 'department', 'position']);
 
         return response()->json([
@@ -46,7 +75,6 @@ class StaffController extends Controller
             'data' => $staff,
         ], Response::HTTP_CREATED);
     }
-
     public function show(Staff $staff): JsonResponse
     {
         $hotel = app('currentHotel');
