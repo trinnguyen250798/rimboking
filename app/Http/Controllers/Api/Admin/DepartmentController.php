@@ -12,7 +12,7 @@ class DepartmentController extends Controller
 {
     public function index(): JsonResponse
     {
-        $departments = Department::all();
+        $departments = Department::all('id','name');
         return response()->json([
             'status' => true,
             'data' => $departments,
