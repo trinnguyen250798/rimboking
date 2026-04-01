@@ -57,6 +57,8 @@ Route::prefix('v1')->group(function () {
             Route::get('me', [AuthController::class, 'me']);
             // Users management
             Route::apiResource('users', Admin\UserController::class)->parameters(['users' => 'ulid']);
+            Route::post('users/{user}/avatar', [Admin\UserController::class, 'upload_avatar']);
+
 
             Route::apiResource('hotels', Admin\HotelController::class)->parameters(['hotels' => 'hotel']);
 
@@ -81,7 +83,7 @@ Route::prefix('v1')->group(function () {
                     'data' => $hotel
                 ]);
             });
-            
+
             Route::apiResource('staff', Admin\StaffController::class)->parameters(['staff' => 'staff']);
         });
 

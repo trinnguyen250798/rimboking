@@ -4,11 +4,16 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
+use App\Models\Hotel;
 use App\Models\User;
+use App\Services\HotelService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules\Password;
+use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\ImageManager;
 use Symfony\Component\HttpFoundation\Response;
 class UserController extends Controller
 {
@@ -46,7 +51,7 @@ class UserController extends Controller
         return response()->json([
             'status' => true,
             'data' => new UserResource($user)
-        ],Response::HTTP_CREATED);  
+        ],Response::HTTP_CREATED);
     }
 
     /**
@@ -97,5 +102,59 @@ class UserController extends Controller
             'status' => true,
             'message' => 'Xóa tài khoản thành công.'
         ],Response::HTTP_NO_CONTENT);
-    }   
+    }
+
+    public function upload_avatar(Request $request, User $user): JsonResponse
+    {
+        $request->validate([
+            'avatar' => 'required|image|max:4096'
+        ]);
+        $manager = new ImageManager(new Driver());
+        $image = $manager->read($request->file('avatar'));
+
+        $basePath = "users/{$user->ulid}";
+
+        // thumb
+        $thumb = clone $image;
+        Storage::disk('public')->put(
+            "$basePath/thumb.webp",
+            $thumb->scaleDown(width:300)->toWebp(70)
+        );
+
+        // small
+        $small = clone $image;
+        Storage::disk('public')->put(
+            "$basePath/small.webp",
+            $small->scaleDown(width:600)->toWebp(75)
+        );
+
+        // medium
+        $medium = clone $image;
+        Storage::disk('public')->put(
+            "$basePath/medium.webp",
+            $medium->scaleDown(width:900)->toWebp(80)
+        );
+
+        // large
+        $large = clone $image;
+        Storage::disk('public')->put(
+            "$basePath/large.webp",
+            $large->scaleDown(width:1600)->toWebp(85)
+        );
+
+        $user->update([
+            'avatar' => $basePath
+        ]);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Upload thành công',
+            'data' => [
+                'thumb' => url(Storage::url("$basePath/thumb.webp")),
+                'small' => url(Storage::url("$basePath/small.webp")),
+                'medium' => url(Storage::url("$basePath/medium.webp")),
+                'large' => url(Storage::url("$basePath/large.webp"))
+            ]
+        ]);
+    }
 }

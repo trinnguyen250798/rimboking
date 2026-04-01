@@ -32,6 +32,10 @@ class User extends Authenticatable
         'last_login_at',
         'provider',
         'provider_id',
+        'province_id',
+        'district_id',
+        'country_id',
+        'address',
     ];
 
     /**
@@ -72,6 +76,10 @@ class User extends Authenticatable
     public function hotels()
     {
         return $this->hasMany(Hotel::class, 'owner_id', 'id');
+    }
+    public function staff()
+    {
+        return $this->belongsTo(Staff::class, 'id', 'user_id');
     }
 }
 

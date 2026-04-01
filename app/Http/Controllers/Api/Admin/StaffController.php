@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
-
+use Illuminate\Support\Facades\Hash;
 class StaffController extends Controller
 {
     public function index(Request $request): JsonResponse
@@ -18,11 +18,11 @@ class StaffController extends Controller
         $staffs = Staff::with(['user', 'department', 'position'])
             ->where('hotel_id', $hotel->id)
             ->get();
-
         return response()->json([
             'status' => true,
-            'data' => $staffs,
+            'data'   => $staffs,
         ], Response::HTTP_OK);
+
     }
 
     public function store(Request $request): JsonResponse
@@ -47,8 +47,7 @@ class StaffController extends Controller
             'name'           => $data['name'],
             'email'          => $data['email'],
             'phone'          => $data['phone'],
-            'department_id'  => $data['department_id'],
-            'position_id'    => $data['position_id'],
+            'province_id'    => $data['province_id'],
             'district_id'    => $data['district_id'],
             'role_id'        => 4,
             'status'         => 1,
@@ -62,6 +61,8 @@ class StaffController extends Controller
         $user = User::create($data_user);
 
         $staff = Staff::create([
+            'department_id'  => $data['department_id'],
+            'position_id'    => $data['position_id'],
             'user_id'  => $user->id,
             'hotel_id' => $hotel->id,
             'ulid'     => (string) Str::ulid(),

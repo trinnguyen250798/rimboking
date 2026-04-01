@@ -102,6 +102,10 @@ class Hotel extends Model
     {
         return $this->belongsTo(Country::class, 'country_code', 'code');
     }
+    public function staffs()
+    {
+        return $this->hasMany(Country::class, 'id', 'hotel_id');
+    }
     public function amenities()
     {
         return $this->belongsToMany(

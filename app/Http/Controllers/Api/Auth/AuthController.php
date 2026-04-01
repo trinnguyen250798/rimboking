@@ -66,6 +66,8 @@ class AuthController extends Controller
            ], Response::HTTP_UNAUTHORIZED);
        }
 
+
+
         return response()->json([
             'status' => true,
             'token' => $result['token'],
@@ -87,19 +89,25 @@ class AuthController extends Controller
             ]
         );
 
-      if ($result['status'] == false) {
-           return response()->json([
-               'status' => false,
-               'message' => $result['message'],
-           ], Response::HTTP_UNAUTHORIZED);
-       }
+        if ($result['status'] === false) {
+            return response()->json([
+                'status' => false,
+                'message' => $result['message'],
+            ], Response::HTTP_UNAUTHORIZED);
+        }
 
-        return response()->json([
-            'status' => true,
-            'token' => $result['token'],
-            'user'  => new UserResource($result['user']),
-            'expires_at' => $result['expires_at']
-        ], Response::HTTP_OK);
+        $user = $result['user']; // Lấy object user ra để dùng cho gọn
+
+        $data_res = [
+            'status'     => true,
+            'token'      => $result['token'],
+            'user'       => new UserResource($user),
+            'expires_at' => $result['expires_at'],
+        ];
+
+
+
+        return response()->json($data_res, Response::HTTP_OK);
     }
 
 
